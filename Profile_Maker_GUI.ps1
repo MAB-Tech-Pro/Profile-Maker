@@ -1,6 +1,24 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+$currentVersion = "1.0"
+$versionUrl = "https://raw.githubusercontent.com/MAB-Tech-Pro/Profile-Maker/main/version.json"
+$scriptUrl = "https://raw.githubusercontent.com/MAB-Tech-Pro/Profile-Maker/main/Profile_Maker_GUI.ps1"
+
+try {
+    $response = Invoke-RestMethod -Uri $versionUrl -TimeoutSec 3
+    if ($response.version -ne $currentVersion) {
+        [System.Windows.Forms.MessageBox]::Show("Naya update agaya hai! Software abhi update ho raha hai. Please wait...", "Auto Update", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
+        
+        Invoke-WebRequest -Uri $scriptUrl -OutFile $PSCommandPath
+        
+        [System.Windows.Forms.MessageBox]::Show("Update mukammal ho gaya! Tool dobara start ho raha hai.", "Success", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
+        
+        Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$PSCommandPath`""
+        exit
+    }
+} catch {
+}
 $currentDir = $PSScriptRoot
 if (-not $currentDir) { $currentDir = (Get-Location).Path } 
 
@@ -9,7 +27,6 @@ $chromePath = Join-Path $currentDir "chrome.exe"
 $baseDir = Join-Path $currentDir "Profiles"
 
 $shortcutsDir = Join-Path $currentDir "Profile Shortcuts"
-
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Cent Browser - Profile Generator"
 $form.ClientSize = New-Object System.Drawing.Size(420, 385)
