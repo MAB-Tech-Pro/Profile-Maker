@@ -1,7 +1,7 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-$currentVersion = "1.0"
+$currentVersion = "1.1"
 $versionUrl = "https://raw.githubusercontent.com/MAB-Tech-Pro/Profile-Maker/main/version.json"
 $scriptUrl = "https://raw.githubusercontent.com/MAB-Tech-Pro/Profile-Maker/main/Profile_Maker_GUI.ps1"
 
