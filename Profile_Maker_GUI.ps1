@@ -1,24 +1,25 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-$currentVersion = "1.1"
+$currentVersion = "1.0"
 $versionUrl = "https://raw.githubusercontent.com/MAB-Tech-Pro/Profile-Maker/main/version.json"
 $scriptUrl = "https://raw.githubusercontent.com/MAB-Tech-Pro/Profile-Maker/main/Profile_Maker_GUI.ps1"
 
 try {
     $response = Invoke-RestMethod -Uri $versionUrl -TimeoutSec 3
     if ($response.version -ne $currentVersion) {
-        [System.Windows.Forms.MessageBox]::Show("Naya update agaya hai! Software abhi update ho raha hai. Please wait...", "Auto Update", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
+        [System.Windows.Forms.MessageBox]::Show("A new update is available! The software is currently updating. Please wait...", "Auto Update", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
         
         Invoke-WebRequest -Uri $scriptUrl -OutFile $PSCommandPath
-        
-        [System.Windows.Forms.MessageBox]::Show("Update mukammal ho gaya! Tool dobara start ho raha hai.", "Success", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
+        Unblock-File -Path $PSCommandPath
+        [System.Windows.Forms.MessageBox]::Show("Update completed successfully! The tool is restarting.", "Success", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
         
         Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$PSCommandPath`""
         exit
     }
 } catch {
 }
+
 $currentDir = $PSScriptRoot
 if (-not $currentDir) { $currentDir = (Get-Location).Path } 
 
